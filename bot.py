@@ -53,7 +53,18 @@ def process_search_step(message):
         bot.reply_to(message, "Вы ввели что-то некоректно повторите попытку")
 
 
+@bot.message_handler(commands=["location"])
+def geo(message, *args, **kwargs):
+    keyboard = telebot.types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True)
+    button_geo = telebot.types.KeyboardButton(text="Отправить местоположение",request_location=True)
+    keyboard.row(button_geo)
+    bot.send_message(message.chat.id, "Нажмите на кнопку и передайте мне свое местоположение", reply_markup=keyboard)
 
+@bot.message_handler(content_types=["location"])
+def location(message):
+    if message.location is not None:
+        print(message.location)
+        print("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude))
 
 
 bot.enable_save_next_step_handlers(delay=2)
